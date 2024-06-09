@@ -48,6 +48,15 @@ func NewAwsAppStack(scope constructs.Construct, id string, props *AwsAppStackPro
 		},
 	})
 
+	integration := awsapigateway.NewLambdaIntegration(myFunction, nil)
+
+	// Define the Routes
+	registerResource := api.Root().AddResource(jsii.String("register"), nil)
+	registerResource.AddMethod(jsii.String("POST"), integration, nil)
+
+	loginResource := api.Root().AddResource(jsii.String("login"), nil)
+	loginResource.AddMethod(jsii.String("POST"), integration, nil)
+
 	return stack
 }
 
