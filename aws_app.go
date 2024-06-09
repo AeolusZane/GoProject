@@ -3,8 +3,9 @@ package main
 import (
 	"github.com/aws/aws-cdk-go/awscdk/v2"
 	// "github.com/aws/aws-cdk-go/awscdk/v2/awssqs"
-	"github.com/aws/aws-cdk-go/awscdk/v2/awslambda"
+	"github.com/aws/aws-cdk-go/awscdk/v2/awsapigateway"
 	"github.com/aws/aws-cdk-go/awscdk/v2/awsdynamodb"
+	"github.com/aws/aws-cdk-go/awscdk/v2/awslambda"
 	"github.com/aws/constructs-go/constructs/v10"
 	"github.com/aws/jsii-runtime-go"
 )
@@ -30,11 +31,22 @@ func NewAwsAppStack(scope constructs.Construct, id string, props *AwsAppStackPro
 
 	myFunction := awslambda.NewFunction(stack, jsii.String("MyFunction"), &awslambda.FunctionProps{
 		Runtime: awslambda.Runtime_PROVIDED_AL2023(),
-		Code: awslambda.AssetCode_FromAsset(jsii.String("lambda/function.zip"),nil),
+		Code:    awslambda.AssetCode_FromAsset(jsii.String("lambda/function.zip"), nil),
 		Handler: jsii.String("main"),
 	})
 
 	table.GrantReadWriteData(myFunction)
+
+	api := awsapigateway.NewRestApi(stack, jsii.String("myApiGateway"), &awsapigateway.RestApiProps{
+		DefaultCorsPreflightOptions: &awsapigateway.CorsOptions{
+			AllowHeaders: jsii.Strings("Content-Type", "Authorization"),
+			AllowMethods: jsii.Strings("GET", "POST", "PUT", "DELETE", "OPTIONS"),
+			AllowOrigins: jsii.Strings("*"),
+		},
+		DeployOptions: &awsapigateway.StageOptions{
+			LoggingLevel: awsapigateway.MethodLoggingLevel_INFO,
+		},
+	})
 
 	return stack
 }
