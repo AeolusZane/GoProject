@@ -1,3 +1,6 @@
+# Description
+this is a go project using AWS demo, using go to write aws middleware and login logic.
+
 # Welcome to your CDK Go project!
 
 This is a blank project for CDK development with Go.
