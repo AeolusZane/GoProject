@@ -39,7 +39,7 @@ func NewAwsAppStack(scope constructs.Construct, id string, props *AwsAppStackPro
 
 	api := awsapigateway.NewRestApi(stack, jsii.String("myApiGateway"), &awsapigateway.RestApiProps{
 		DefaultCorsPreflightOptions: &awsapigateway.CorsOptions{
-			AllowHeaders: jsii.Strings("Content-Type", "Authorization"),
+			AllowHeaders: jsii.Strings("Content-Type", "X-Amz-Date", "Authorization", "X-Api-Key"),
 			AllowMethods: jsii.Strings("GET", "POST", "PUT", "DELETE", "OPTIONS"),
 			AllowOrigins: jsii.Strings("*"),
 		},
